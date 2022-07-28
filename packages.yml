@@ -1,0 +1,22 @@
+---
+
+- 
+  hosts: centos
+  tasks:
+    - name: update dnf cache
+      dnf:
+        update_cache: yes
+    - name: Install tcpdump and mailx on proxy servers
+      dnf:
+        name:
+          - tcpdump
+          - mailx
+        state: present
+      when: inventory_hostname in groups['proxy']
+    - name: Install lsof and mailx on database servers
+      dnf:
+        state: present
+        name:
+          - lsof
+          - mailx
+      when: inventory_hostname in groups['database']

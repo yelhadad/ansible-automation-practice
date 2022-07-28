@@ -1,0 +1,20 @@
+---
+
+- 
+
+  hosts: database
+  tasks:
+    - name: create sql_backups directory if it doesnt exits
+      file:
+        path: /mnt/mysql_backups
+        state: directory
+        mode: '0755'
+    - name: copy database_lists.txt
+      copy:
+        src: database_list.txt
+        dest: /mnt/mysql_backups/database_list.txt
+    - name: gzip database_lists.txt
+      community.general.archive:
+        path: /mnt/mysql_backups/database_list.txt
+        dest: /mnt/mysql_backups/archive.gz
+

@@ -1,0 +1,30 @@
+- 
+  hosts: centos
+  vars:
+   password: "{{ user_password | password_hash('sha512')}}"  
+  vars_files:
+   - secrets.yml
+
+  tasks:
+    # - name: include var file
+    #  include_vars: vars/user_list.yml
+    - name: add automation user to centos containers
+      user:
+        password: "{{ password }}" 
+        generate_ssh_key: no
+        shell: /bin/bash
+        name: automation
+- 
+  hosts: control
+  vars:
+   password: "{{ user_password | password_hash('sha512')}}"  
+  vars_files:
+   - secrets.yml  
+
+  tasks:
+    - name: add ssh keys to local machine
+      script:
+        cmd: ./automation_no_pass_ssh_single_server.sh "{{ item }}" "automation" "{{ user_password }}"
+      with_items: "{{ groups['centos'] }}"
+
+

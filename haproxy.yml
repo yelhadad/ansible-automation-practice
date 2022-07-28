@@ -1,0 +1,16 @@
+---
+
+- 
+
+  hosts: proxy
+  tasks:
+    - name: update dnf cache
+      dnf:
+        update_cache: yes
+    - name: install haproxy
+      dnf:
+        name: haproxy
+        state: present
+
+  roles:
+    - geerlingguy.haproxy

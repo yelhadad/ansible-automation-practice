@@ -1,0 +1,18 @@
+[control]
+ubuntu-c ansible_connection=local
+
+[centos]
+centos1 ansible_port=2222  
+centos[2:4] 
+
+[centos:vars]
+ansible_user=root
+
+[proxy]
+centos1
+
+[webservers]
+centos[2:3]
+
+[database]
+centos4

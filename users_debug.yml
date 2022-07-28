@@ -1,0 +1,11 @@
+- 
+  hosts: webservers
+  vars_files:
+   - vars/user_list.yml
+  tasks:
+    # - name: include var file
+    #  include_vars: vars/user_list.yml
+    - name: add user to webservers
+      debug:
+        msg: "{{ item }}"
+      with_items: "{{ groups['webservers'] }}"

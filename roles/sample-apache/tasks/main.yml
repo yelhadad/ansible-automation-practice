@@ -1,0 +1,35 @@
+---
+# tasks file for sample-apache
+- name: update dnf cache 
+  dnf:
+    update_cache: yes
+    
+- name: remove nginx package from hosts
+  dnf:
+    name: nginx
+    state: absent
+
+- name: install httpd mod_ssl and php
+  dnf:
+    name:
+      - httpd
+      - mod_ssl
+      - php
+    state: present
+
+# check firewall rules (in reality restart the container with new ports)
+- name:
+  debug:
+    msg: >
+      run the command
+      firewall-cmd --zone=public --add-port=80/tcp --permanent 
+      firewall-cmd --zone=public --add-port=443/tcp --permanent 
+      firewall-cmd --reload 
+      
+- name: create index.html
+  template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+  notify: restart httpd service
+
+

@@ -1,0 +1,22 @@
+---
+- 
+  hosts: centos
+  vars:
+    ansible_fqdn_list: "{{ ansible_fqdn }}"
+  tasks:
+    - debug:
+        msg: "{{ ansible_fqdn_list }}" 
+- 
+  hosts: database
+  gather_facts: no
+  tasks:
+    - name: create server_list.txt
+      template:
+        src: server_list.j2
+        dest: /etc/server_list.txt
+    - name: modify server_list.txt
+      file:
+        path: /etc/server_list.txt
+        owner: automation
+        mode: 0644
+

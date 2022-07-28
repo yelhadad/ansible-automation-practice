@@ -1,0 +1,10 @@
+---
+
+- 
+  hosts: database
+  vars:
+   database_password: database_password
+  roles:
+    - sample-mysql
+
+...

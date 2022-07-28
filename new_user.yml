@@ -1,0 +1,10 @@
+---
+- 
+  hosts: centos
+  vars:
+    password: password
+  tasks:
+    - name: create test user
+      user:
+        name: test
+        password: "{{ password | password_hash('sha512') }}"

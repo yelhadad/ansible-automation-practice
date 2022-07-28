@@ -1,0 +1,23 @@
+---
+
+ - 
+
+   hosts: centos
+   tasks:
+     - name: check mermory on target
+       shell: free | awk 'NR==2 {print $2}'
+       register: memory
+
+     - name: print mermory value
+       debug:
+         msg: "{{ memory['stdout'] }}"
+
+     - name: "update memory if it's bigger than 2048MB"
+       ansible.posix.sysctl:
+         name: vm.swappiness
+         value: 10
+       failed_when:  memory['stdout'] | int < 2048000 
+
+       
+        
+

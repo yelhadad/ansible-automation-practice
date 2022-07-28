@@ -1,0 +1,18 @@
+---
+- 
+  hosts: proxy
+  tasks:
+    - name: Install cronie if the container doesnt have it
+      package:
+        name: cronie
+        state: present
+
+    - name: run date command every hour
+      cron:
+        job: date >> /var/log/time.log
+        name: run date command every hour
+        special_time: hourly
+        user: root
+
+
+

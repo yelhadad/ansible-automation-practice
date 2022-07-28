@@ -1,0 +1,21 @@
+---
+- 
+  hosts: proxy
+  tasks:
+    - copy:
+        content: 'Welcome to HAProxy server'
+        dest: /etc/motd
+      
+- 
+  hosts: webservers
+  tasks:
+    - copy:
+        content: 'Welcome to Apache server'
+        dest: /etc/motd
+        
+- 
+  hosts: database
+  tasks:
+    - copy:
+        content: 'Welcome to database server'
+        dest: /etc/motd

@@ -1,0 +1,69 @@
+---
+- 
+  hosts: webservers
+  vars:
+   password: "{{ user_password | password_hash('sha512')}}"  
+  vars_files:
+   - vars/user_list.yml
+   - secrets.yml
+
+  tasks:
+    # - name: include var file
+    #  include_vars: vars/user_list.yml
+    - name: add user to webservers
+      user:
+        password: "{{ password }}" 
+        generate_ssh_key: no
+        group: wheel
+        shell: /bin/bash
+        name: "{{ item['username'] }}"
+      with_items: "{{ users }}"
+      when: item['uid'] / 1000 < 2
+- 
+  hosts: control
+  vars:
+   password: "{{ user_password | password_hash('sha512')}}"  
+  vars_files:
+   - vars/user_list.yml
+   - secrets.yml  
+
+  tasks:
+    - name: add ssh keys to local machine
+      script:
+        cmd: ./automation_no_pass_ssh_single_server.sh "{{ item.1 }}" "{{ item.0['username'] }}" "{{ user_password  }}"
+      # nested loop
+      loop: "{{ users|product(groups['webservers'])|list  }}"
+      when: item.0['uid'] / 1000 < 2
+
+
+- 
+  hosts: database
+  vars_files:
+    - vars/user_list.yml
+    - secrets.yml  
+  tasks:
+    - name: add user to database
+      user:
+        password: "{{ user_password | password_hash('sha512')}}"
+        generate_ssh_key: no
+        group: wheel
+        shell: /bin/bash
+        name: "{{ item['username'] }}"
+      with_items: "{{ users }}"
+      when: item['uid'] / 1000 > 2
+
+- 
+  hosts: control
+  vars:
+   password: "{{ user_password | password_hash('sha512')}}"  
+  vars_files:
+   - vars/user_list.yml
+   - secrets.yml  
+
+  tasks:
+    - name: add ssh keys to local machine
+      script:
+        cmd: ./automation_no_pass_ssh_single_server.sh "{{ item.1 }}" "{{ item.0['username'] }}" "{{ user_password  }}"
+      # nested loop
+      loop: "{{ users|product(groups['database'])|list  }}"
+      when: item.0['uid'] / 1000 > 2

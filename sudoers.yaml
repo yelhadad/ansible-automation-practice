@@ -1,0 +1,12 @@
+---
+
+- 
+ 
+ hosts: centos 
+
+ tasks:
+   - name: Allow to user automation to rub sudo commands without password
+     community.general.sudoers:
+       name: automation no pass
+       user: automation
+       commands: ALL

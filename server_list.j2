@@ -1,0 +1,5 @@
+#{# template for server_list.txt #}
+
+{% for host in groups['centos'] %}
+    {{ hostvars[host]['ansible_fqdn'] }}
+{% endfor %}

@@ -1,0 +1,11 @@
+---
+
+- 
+  hosts: all
+
+- 
+  hosts: database
+  gather_facts: no
+  tasks:
+    - debug:
+        msg: "{{ ansible_fqdn }}"

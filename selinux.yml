@@ -1,0 +1,12 @@
+---
+
+ - 
+
+   hosts: webservers
+   pre_tasks:
+     - name: install selinux on targets
+       dnf:
+        name: selinux-policy
+        state: present
+   roles:
+     - linux-system-roles.selinux
